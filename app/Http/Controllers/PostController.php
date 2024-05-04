@@ -2,47 +2,56 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Post;
+use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
-    public function index(){
-        $post = new Post();
-        $posts = $post->all();
-        return view('posts.index', ['posts' => $posts]);
-    }
-
-    public function store(Request $request){
-        $post = new Post();
-        $post->title = $request->title;
-        $post->content = $request->content;
-        $post->user_id = rand(1, 10);
-        $post->save();
+    public function deletePost(Post $post) {
+        if (auth()->user()->id === $post['user_id']) {
+            $post->delete();
+        }
         return redirect('/');
     }
 
-    public function show($id){
-        $post = Post::with('user')->where('id', $id)->firstOrFail();
-        return view('posts.show', ['post' => $post]);
+    public function updatePost(Post $post, Request $request)
+    {
+        if (auth()->user()->id !== $post['user_id']) {
+            return redirect('/');
+        }
+
+        $incomingFields = $request->validate([
+            'title'=> 'required',
+            'body' => 'required'
+        ]);
+
+        $incomingFields['title'] = strip_tags($incomingFields['title']);
+        $incomingFields['body'] = strip_tags($incomingFields['body']);
+
+        $post->update($incomingFields);
+         return redirect('/');
     }
 
-    public function edit($id){
-        $post = Post::where('id', $id)->firstorFail();
-        return view('posts.edit', ['post' => $post]);
+    public function updateScreen(Post $post){ 
+
+        if (auth()->user()->id !== $post['user_id']) {
+            return redirect('/');
+        }
+
+        return view('update-post', ['post' => $post]);
     }
 
-    public function update(Request $request, $id){
-        $post = Post::where('id', $id)->firstOrFail();
-        $post->title = $request->title;
-        $post->content = $request->content;
-        $post->save();
-        return redirect('/');
-    }
+    public function createPost(Request $request) {
+        $incomingFields = $request->validate([
+            'title' => 'required',
+            'body' => 'required',
+        ]);
 
-    public function destroy($id){
-        $post = Post::where('id', $id)->firstOrFail();
-        $post->delete();
+        $incomingFields['title'] = strip_tags($incomingFields['title']);
+        $incomingFields['body'] = strip_tags($incomingFields['body']);
+        $incomingFields['user_id'] = auth()->id();
+
+        Post::create($incomingFields);
         return redirect('/');
     }
 }

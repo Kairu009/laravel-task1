@@ -1,0 +1,27 @@
+
+@import 'posts.css';
+
+/* Navbar */
+.navbar-brand {
+    font-size: 1.8rem;
+}
+
+.navbar-nav .nav-link {
+    font-size: 1.2rem;
+}
+
+/* Main Content */
+.container {
+    max-width: 800px;
+    margin-top: 20px;
+}
+
+/* Footer */
+.footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: #343a40;
+    color: #ffffff;
+    padding: 10px 0;
+}

@@ -7,6 +7,10 @@
     <title>Forum App</title>
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <!-- Posts CSS -->
+    <link href="{{ asset('css/posts.css') }}" rel="stylesheet">
 </head>
 <body>
 
